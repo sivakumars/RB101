@@ -1,5 +1,5 @@
 =begin
-  # Input 
+  # Input
   ## the loan amount
   ## the Annual Percentage Rate (APR)
   ## the loan duration
@@ -24,14 +24,6 @@ def prompt_message(message)
   puts(">> #{message}")
 end
 
-def calculate_monthly_interest_rate(annual_rate)
-  annual_rate.to_f / 12
-end
-
-def calculate_loan_duration_months(duration_years)
-  duration_years.to_f * 12
-end
-
 loop do
   loan_amount = ''
   loop do
@@ -53,16 +45,18 @@ loop do
   loop do
     prompt_message("Enter the loan duration in years: ")
     loan_duration = gets.chomp
-    break if (valid_number?(loan_duration) && positive?(loan_duration))
+    break if valid_number?(loan_duration) && positive?(loan_duration)
     prompt_message("Invalid loan duration. Please enter a valid duration")
   end
 
   puts "#{loan_amount} #{annual_percentage_rate} #{loan_duration}"
 
-  monthly_interest_rate = calculate_monthly_interest_rate(annual_percentage_rate) / 100
-  loan_duration_in_months = calculate_loan_duration_months(loan_duration)
+  monthly_interest_rate = (annual_percentage_rate.to_f) / 12 / 100
+  loan_duration_in_months = (loan_duration.to_f) * 12
 
-  monthly_payment_rate = loan_amount.to_f * ( monthly_interest_rate / (1 - (1 + monthly_interest_rate)**(-loan_duration_in_months)))
+  monthly_payment_rate = loan_amount.to_f * 
+                         (monthly_interest_rate /
+                         (1 - (1 + monthly_interest_rate)**(-loan_duration_in_months)))
 
   puts "Monthly payment rate: #{monthly_payment_rate.round(2)}"
 
