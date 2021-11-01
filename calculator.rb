@@ -18,7 +18,7 @@ def prompt_text(message)
 end
 
 def valid_number?(number)
-  number.length > 0 && !number.match(/[^0-9.]/) && number.match(/.$/)
+  number.length > 0 && !number.match(/[^0-9.]/) && !number.match(/^\.$/)
 end
 
 def calculate(number1_string, number2_string, operator_string)
