@@ -1,0 +1,19 @@
+welcome: "Welcome to the calculator"
+valid_number: "Enter a valid number"
+valid_operator: "Please enter a valid operator# from the given options 1,2,3 and 4" 
+invalid_number: "The entered number was invalid"
+operator_prompt: |+1
+  What operation would you like to perform?
+    1. Add
+    2. Subtract
+    3. Multiply
+    4. Divide
+
+# Format for Internationalizing the calculator_messages.yml  => creates a hash of hashes
+
+# en:
+#   welcome: "Welcome to Calculator! Enter your name:"
+#   valid_name: "Make sure to enter a valid name."
+# es:
+#   welcome: "Bienvenido a la calculadora! Entre su nombre:"
+#   valid_name: "Asegúrese de entrar un nombre válido."
