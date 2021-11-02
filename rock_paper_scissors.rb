@@ -18,8 +18,8 @@ end
 
 def win?(player_one, player_second)
   (player_one == 'rock' && player_second == 'scissors') ||
-  (player_one == 'paper' && player_second == 'rock') ||
-  (player_one == 'scissors' && player_second == 'paper')
+    (player_one == 'paper' && player_second == 'rock') ||
+    (player_one == 'scissors' && player_second == 'paper')
 end
 
 def display_results(player, computer)
