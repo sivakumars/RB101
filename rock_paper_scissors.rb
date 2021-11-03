@@ -29,17 +29,17 @@ $player_stats = {
 }
 
 def print_text(message, prompt = false)
-  prompt ?  puts(">> #{message}") : puts("\n#{message}")
+  prompt ?  puts(">> #{message}") : puts("#{message}")
 end
 
 def display_wait
-  print "wait...."
+  print_text("wait....")
   sleep(1)
 end
 
 def display_choices
   print_text("Available choices: ")
-  VALID_CHOICES.each_with_index{ |(key, value), index| puts " #{index+1}.#{key} (#{value})"}
+  VALID_CHOICES.each_with_index{ |(key, value), index| print_text(" #{index+1}.#{key} (#{value})")}
 end
 
 def valid_choice?(choice)
