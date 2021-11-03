@@ -77,7 +77,7 @@ def determine_grand_winner(stats)
   stats.key(get_player_stats(stats).values.max)
 end
 
-def one_more_round?(stats)
+def next_round?(stats)
   get_player_stats(stats).values.max < MAX_WINS
 end
 
@@ -107,7 +107,7 @@ game_stats = {
 }
 loop do
   display_choices_list
-  while one_more_round?(game_stats)
+  while next_round?(game_stats)
     user_choice = ''
     loop do
       print_text("#{user_name}, Make a choice(#{choices_keys}): ", true)
