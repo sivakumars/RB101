@@ -65,7 +65,6 @@ def winner?(first, second, player)
 end
 
 def display_results(player, computer)
-  display_wait
   if winner?(player, computer, 'user')
     print_text("+++ #{$user_name} won! +++")
   elsif winner?(computer, player, 'computer')
@@ -105,6 +104,7 @@ loop do
     print_text("Computer's choice: #{computer_choice_value}")
     print_text("********************************************")
 
+    display_wait
     display_results(user_choice_value, computer_choice_value)
   end
 
