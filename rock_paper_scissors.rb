@@ -130,4 +130,4 @@ loop do
   end
 end
 
-print_text("Thank you for playing!")
+print_text("Thank you for playing, #{user_name}!")

@@ -11,7 +11,6 @@
 
   # P = Loan amount; J = monthly interest rate; N = loan duration in months
 =end
-
 def valid_number?(number)
   number.length > 0 && !number.match(/[^0-9.]/) && !number.match(/^\.$/)
 end
@@ -22,6 +21,17 @@ end
 
 def prompt(message)
   puts(">> #{message}")
+end
+
+def display_results(loan_amount, monthly_amount, duration)
+  if monthly_amount.nan? 
+    monthly_amount = 0.0
+  end
+  puts("#{loan_amount} #{monthly_amount} #{duration}")
+  puts("Loan amount: #{loan_amount.round(2)}")
+  puts("Monthly payment rate: #{monthly_amount.round(2)}")
+  puts("Total payable: #{(loan_amount + monthly_amount).round(2)}")
+  puts("Total duration: #{duration.to_i} months")
 end
 
 loop do
@@ -37,7 +47,7 @@ loop do
   loop do
     prompt("Enter the annual percentage rate. e.g., 10 for 10%; 10.5 for 10.5% : ")
     annual_percentage_rate = gets.chomp
-    break if valid_number?(annual_percentage_rate) && positive?(annual_percentage_rate)
+    break if valid_number?(annual_percentage_rate) #&& positive?(annual_percentage_rate)
     prompt("Invalid percentage rate. Please enter a valid rate")
   end
 
@@ -49,16 +59,22 @@ loop do
     prompt("Invalid loan duration. Please enter a valid duration")
   end
 
-  puts "#{loan_amount} #{annual_percentage_rate} #{loan_duration}"
+  loan_amount = loan_amount.to_f
+  annual_percentage_rate = annual_percentage_rate.to_f
 
-  monthly_interest_rate = (annual_percentage_rate.to_f) / 12 / 100
+  #puts "#{loan_amount} #{annual_percentage_rate} #{loan_duration}"
+
+  monthly_interest_rate = annual_percentage_rate.to_f > 0 ? ((annual_percentage_rate.to_f) / 12 / 100) :  0.0
   loan_duration_in_months = (loan_duration.to_f) * 12
 
+  #puts monthly_interest_rate
   monthly_payment_rate = loan_amount.to_f * 
                          (monthly_interest_rate /
                          (1 - (1 + monthly_interest_rate)**(-loan_duration_in_months)))
 
-  puts "Monthly payment rate: #{monthly_payment_rate.round(2)}"
+
+  display_results(loan_amount, monthly_payment_rate, loan_duration_in_months)
+  #puts "Monthly payment rate: #{monthly_payment_rate.round(2)}"
 
   prompt("Do you want to calculate again? Enter Y to calculate again and any key to exit: ")
   repeat_calculation = gets.chomp
