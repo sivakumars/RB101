@@ -99,7 +99,7 @@ loop do
 
     user_choice_value = get_symbol_value(user_choice) || "<No value>"
     computer_choice_value = get_symbol_value(computer_choice) || "<No value>"
-    
+
     print_text("********************************************")
     print_text("#{$user_name}'s choice: #{user_choice_value}")
     print_text("Computer's choice: #{computer_choice_value}")
