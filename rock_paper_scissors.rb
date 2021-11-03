@@ -31,7 +31,7 @@ def choices_keys
 end
 
 def valid_choice?(choice)
-  VALID_CHOICES.keys.include?(:"#{choice}")
+  VALID_CHOICES.keys.include?(choice)
 end
 
 def get_symbol_value(key)
@@ -93,7 +93,7 @@ loop do
     loop do
       print_text("#{user_name}, Make a choice(#{choices_keys}): ", true)
       user_choice = gets.chomp
-      break if valid_choice?(user_choice)
+      break if valid_choice?(user_choice.to_sym)
       print_text("You entered an invalid choice")
     end
 
