@@ -8,14 +8,22 @@ VALID_CHOICES = {
   l: 'lizard'
 }
 
+BEATABLE_MOVES = {
+  rock: ['scissors', 'lizard'],
+  paper: ['rock', 'spock'],
+  scissors: ['paper', 'lizard'],
+  spock: ['rock', 'scissors'],
+  lizard: ['paper', 'spock']
+}
+
 MAX_WINS = 3
 
 def print_text(message, prompt = false)
   prompt ? puts(">> #{message}") : puts(message)
 end
 
-def display_wait
-  print_text("wait....")
+def display_delay(message = 'wait...')
+  print_text(message)
   sleep(1)
 end
 
@@ -38,35 +46,45 @@ def get_symbol_value(key)
   VALID_CHOICES[key.to_sym]
 end
 
-def update_wins(key, stats)
-  stats[key.to_sym] += 1
+def update_stats(stats, key)
+  stats[:rounds] += 1
+  if key
+    stats[key.to_sym] += 1
+  end
 end
 
 def reset(stats_hash)
   stats_hash.each { |key, _| stats_hash[key] = 0 }
 end
 
-def winner?(first, second, player, stats)
-  winner = case first
-           when 'rock'
-             ['scissors', 'lizard'].include?(second)
-           when 'paper'
-             ['rock', 'spock'].include?(second)
-           when 'scissors'
-             ['paper', 'lizard'].include?(second)
-           when 'spock'
-             ['rock', 'scissors'].include?(second)
-           when 'lizard'
-             ['paper', 'spock'].include?(second)
-           end
-  update_wins(player, stats) if winner
-  winner
+def winner?(first, second)
+  BEATABLE_MOVES[first.to_sym].include?(second)
 end
 
-def display_results(player, computer, stats, name)
-  if winner?(player, computer, 'user', stats)
+def determine_winner(user, computer)
+  if winner?(user, computer)
+    "user"
+  elsif winner?(computer, user)
+    "computer"
+  end
+end
+
+def get_player_stats(stats)
+  stats.select { |key, _| key != :rounds }
+end
+
+def determine_grand_winner(stats)
+  stats.key(get_player_stats(stats).values.max)
+end
+
+def one_more_round?(stats)
+  get_player_stats(stats).values.max < MAX_WINS
+end
+
+def display_results(winner, name)
+  if winner == 'user'
     print_text("+++ #{name} won! +++")
-  elsif winner?(computer, player, 'computer', stats)
+  elsif winner == 'computer'
     print_text('+++ Computer won :( +++')
   else
     print_text("+++ It's a tie +++")
@@ -82,13 +100,14 @@ loop do
 end
 user_name.capitalize!
 
-player_stats = {
+game_stats = {
   user: 0,
-  computer: 0
+  computer: 0,
+  rounds: 0
 }
 loop do
   display_choices_list
-  while player_stats.values.max < MAX_WINS
+  while one_more_round?(game_stats)
     user_choice = ''
     loop do
       print_text("#{user_name}, Make a choice(#{choices_keys}): ", true)
@@ -103,18 +122,20 @@ loop do
     computer_choice_value = get_symbol_value(computer_choice) || "<No value>"
 
     print_text("********************************************")
+    print_text("ROUND: ##{game_stats[:rounds] + 1}")
     print_text("#{user_name}'s choice: #{user_choice_value}")
     print_text("Computer's choice: #{computer_choice_value}")
-    print_text("********************************************")
 
-    display_wait
-    display_results(user_choice_value,
-                    computer_choice_value,
-                    player_stats,
-                    user_name)
+    display_delay("Determining the winner...")
+
+    winner = determine_winner(user_choice_value, computer_choice_value)
+    update_stats(game_stats, winner)
+
+    display_results(winner, user_name)
+    print_text("********************************************")
   end
 
-  grand_winner = player_stats.key(player_stats.values.max).to_s
+  grand_winner = determine_grand_winner(game_stats).to_s
   if grand_winner == 'user'
     grand_winner = user_name
   end
@@ -123,7 +144,7 @@ loop do
   print_text("Do you want to play again? Press 'y' to play again ", true)
   play_again = gets.chomp
   if play_again.downcase.start_with?('y')
-    reset(player_stats)
+    reset(game_stats)
     system("cls") || system("clear")
   else
     break
