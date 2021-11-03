@@ -1,19 +1,4 @@
 =begin
-  # Prompt the user to enter an input from given choices
-    a. Validate the user choice
-  # Assign a computer choice
-  # compare the user choice with the computer choice
-  # display results
-  Lizard Spock
-
-Typing the full word "rock" or "lizard" is tiring. 
-Update the program so the user can type "r" for "rock," "p" for "paper," etc. 
-Note that if you do bonus #1, you'll have two words that start with "s." How do you resolve that?
-
-Keep score of the player's and computer's wins. 
-When either the player or computer reaches three wins, the match is over, and the winning player becomes the grand winner. 
-Don't add your incrementing logic to display_results. Keep your methods simple; 
-they should perform one logical task — no more, no less.
 =end
 VALID_CHOICES = {
   r: 'rock',
@@ -23,13 +8,15 @@ VALID_CHOICES = {
   l: 'lizard'
 }
 
+MAX_WINS = 3
+
 $player_stats = {
   user: 0,
   computer: 0
 }
 
 def print_text(message, prompt = false)
-  prompt ?  puts(">> #{message}") : puts("#{message}")
+  prompt ?  puts(">> #{message}") : puts(message)
 end
 
 def display_wait
@@ -37,9 +24,15 @@ def display_wait
   sleep(1)
 end
 
-def display_choices
+def display_choices_list
   print_text("Available choices: ")
-  VALID_CHOICES.each_with_index{ |(key, value), index| print_text(" #{index+1}.#{key} (#{value})")}
+  VALID_CHOICES.each_with_index do |(key, value), index|
+    print_text(" #{index + 1}. #{key} (#{value})")
+  end
+end
+
+def choices_keys
+  VALID_CHOICES.keys.join(', ')
 end
 
 def valid_choice?(choice)
@@ -57,9 +50,9 @@ end
 def winner?(first, second, player)
   winner = case first
            when 'rock'
-            ['scissors', 'lizard'].include?(second)
+             ['scissors', 'lizard'].include?(second)
            when 'paper'
-            ['rock', 'spock'].include?(second)
+             ['rock', 'spock'].include?(second)
            when 'scissors'
              ['paper', 'lizard'].include?(second)
            when 'spock'
@@ -74,21 +67,29 @@ end
 def display_results(player, computer)
   display_wait
   if winner?(player, computer, 'user')
-    print_text('You won!')
+    print_text("+++ #{$user_name} won! +++")
   elsif winner?(computer, player, 'computer')
-    print_text('Computer won :(')
+    print_text('+++ Computer won :( +++')
   else
-    print_text("It's a tie")
+    print_text("+++ It's a tie +++")
   end
 end
 
+$user_name = ''
 loop do
-  display_choices
-  while $player_stats.values.max < 3
-    print_text("Make a choice: ", true)
-    
+  print_text("Enter your name: ")
+  $user_name = gets.chomp
+  break if $user_name.length > 2 && $user_name.match(/[a-zA-Z]/)
+  print_text("Please enter a valid name atleast 3 characters long")
+end
+$user_name.capitalize!
+
+loop do
+  display_choices_list
+  while $player_stats.values.max < MAX_WINS
     user_choice = ''
     loop do
+      print_text("#{$user_name}, Make a choice(#{choices_keys}): ", true)
       user_choice = gets.chomp
       break if valid_choice?(user_choice)
       print_text("You entered an invalid choice")
@@ -96,20 +97,27 @@ loop do
 
     computer_choice = VALID_CHOICES.keys.sample
 
-    user_choice_value = get_symbol_value(user_choice) || ""
-    computer_choice_value = get_symbol_value(computer_choice) || ""
+    user_choice_value = get_symbol_value(user_choice) || "<No value>"
+    computer_choice_value = get_symbol_value(computer_choice) || "<No value>"
+    
+    print_text("********************************************")
+    print_text("#{$user_name}'s choice: #{user_choice_value}")
+    print_text("Computer's choice: #{computer_choice_value}")
+    print_text("********************************************")
 
-    print_text("Your choice: #{user_choice_value}; Computer's choice: #{computer_choice_value}")
-    display_results(user_choice_value,computer_choice_value)
+    display_results(user_choice_value, computer_choice_value)
   end
 
   grand_winner = $player_stats.key($player_stats.values.max).to_s
-  print_text("The grand winner is: #{grand_winner.capitalize!}")
-  
+  if grand_winner == 'user'
+    grand_winner = $user_name
+  end
+  print_text("The grand winner is: #{grand_winner.upcase}")
+
   print_text("Do you want to play again? Press 'y' to play again ", true)
   play_again = gets.chomp
   if play_again.downcase.start_with?('y')
-    $player_stats.each{|key, value| $player_stats[key] = 0}
+    $player_stats.each { |key, _| $player_stats[key] = 0 }
     system("cls") || system("clear")
   else
     break
