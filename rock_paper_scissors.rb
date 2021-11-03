@@ -1,4 +1,27 @@
 =begin
+# Rock, paper, scissors, spock, and lizard
+Problem: Determine the winner based on the user input by comparing it against
+the computer generated choice.
+
+Pseudocode:
+1.Prompt the user for an input from a list of choices(r,p,sc,sp,l)
+  a.Validate the user input
+2.If user choice is valid
+    Randomly pick an item from the available choices for the computer
+3.Determine the winner by comparing the user choice against the computer's
+  choice
+4.Update the game stats - win record of the player (user and the computer)
+  and the number of rounds finished.
+5.If any one of the players (user or computer) has won thrice,
+    Exit the rounds loop.
+  Else,
+    loop to step 1 and ask for the user's choice again until one player
+    reaches three wins.
+6.Determine the grand winner - the first player to reach three wins.
+7.Prompt the user to play the game again.
+8.If the user chooses 'y', reset the game stats, clear the console and
+  loop to step 1
+9.Print a goodbye message to the user
 =end
 VALID_CHOICES = {
   r: 'rock',
@@ -94,7 +117,7 @@ end
 user_name = ''
 loop do
   print_text("Enter your name: ")
-  user_name = gets.chomp
+  user_name = gets.strip
   break if user_name.length > 2 && user_name.match(/[a-zA-Z]/)
   print_text("Please enter a valid name atleast 3 characters long")
 end
@@ -111,7 +134,7 @@ loop do
     user_choice = ''
     loop do
       print_text("#{user_name}, Make a choice(#{choices_keys}): ", true)
-      user_choice = gets.chomp
+      user_choice = gets.strip
       break if valid_choice?(user_choice.to_sym)
       print_text("You entered an invalid choice")
     end
@@ -142,7 +165,7 @@ loop do
   print_text("The grand winner is: #{grand_winner.upcase}")
 
   print_text("Do you want to play again? Press 'y' to play again ", true)
-  play_again = gets.chomp
+  play_again = gets.strip
   if play_again.downcase.start_with?('y')
     reset(game_stats)
     system("cls") || system("clear")
