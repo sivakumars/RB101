@@ -10,5 +10,5 @@ Quiz notes:
 3. `select` and `reject` methods return a new array and it may contain the same values as the orignal array
     depending on the return value of the block(return value of the block is determined the select/reject criteria).
 
-4. `map` method is used to transform the elements of an array. The transformed element is determined by the return 
-    value of the block
+4. `map` method returns a new array, and it is used to transform the elements of an array. The transformed element 
+   is determined by the return value of the block
