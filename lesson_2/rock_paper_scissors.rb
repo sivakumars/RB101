@@ -172,9 +172,7 @@ loop do
   end
 
   grand_winner = determine_grand_winner(game_stats).to_s
-  if grand_winner == 'user'
-    grand_winner = user_name
-  end
+  grand_winner = user_name if grand_winner == 'user'
   print_text("The grand winner is: #{grand_winner.upcase}")
 
   print_text("Do you want to play again? Press 'y' to play again ", true)
