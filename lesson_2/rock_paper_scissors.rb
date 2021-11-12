@@ -128,31 +128,35 @@ def print_score(stats, user_name)
   print_text("Computer's score: #{stats[:computer]}")
 end
 
-user_name = ''
-loop do
-  print_text("Enter your name: ")
-  user_name = gets.strip
-  break if user_name.length > 2 && user_name.match(/[a-zA-Z]/)
-  print_text("Please enter a valid name atleast 3 characters long")
+def prompt_user_name
+  loop do
+    print_text("Enter your name: ")
+    user_name = gets.strip
+    return user_name if user_name.length > 2 && user_name.match(/[a-zA-Z]/)
+    print_text("Please enter a valid name atleast 3 characters long")
+  end
 end
-user_name.capitalize!
+
+def get_user_choice(name)
+  loop do
+    print_text("#{name}, Make a choice(#{choices_keys}): ", true)
+    user_choice = gets.strip
+    return user_choice if valid_choice?(user_choice.to_sym)
+    print_text("You entered an invalid choice")
+  end
+end
 
 game_stats = {
   user: 0,
   computer: 0,
   rounds: 0
 }
+user_name = prompt_user_name.capitalize!
+# Game loop
 loop do
   display_choices_list
   while next_round?(game_stats)
-    user_choice = ''
-    loop do
-      print_text("#{user_name}, Make a choice(#{choices_keys}): ", true)
-      user_choice = gets.strip
-      break if valid_choice?(user_choice.to_sym)
-      print_text("You entered an invalid choice")
-    end
-
+    user_choice = get_user_choice(user_name)
     computer_choice = VALID_CHOICES.keys.sample
 
     user_choice_value = get_symbol_value(user_choice)
