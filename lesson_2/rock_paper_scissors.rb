@@ -106,12 +106,26 @@ end
 
 def display_results(winner, name)
   if winner == 'user'
-    print_text("+++ #{name} won! +++")
+    print_text("+++ #{name} won!! +++")
   elsif winner == 'computer'
     print_text('+++ Computer won :( +++')
   else
-    print_text("+++ It's a tie +++")
+    print_text("+++ Tie! +++")
   end
+end
+
+def print_choices(user_name, user_choice, computer_choice)
+  print_text("#{user_name}'s choice: #{user_choice}")
+  print_text("Computer's choice: #{computer_choice}")
+end
+
+def print_rounds(stats)
+  print_text("ROUND: ##{stats[:rounds] + 1}")
+end
+
+def print_score(stats, user_name)
+  print_text("#{user_name}'s score: #{stats[:user]}")
+  print_text("Computer's score: #{stats[:computer]}")
 end
 
 user_name = ''
@@ -141,20 +155,19 @@ loop do
 
     computer_choice = VALID_CHOICES.keys.sample
 
-    user_choice_value = get_symbol_value(user_choice) || "<No value>"
-    computer_choice_value = get_symbol_value(computer_choice) || "<No value>"
+    user_choice_value = get_symbol_value(user_choice)
+    computer_choice_value = get_symbol_value(computer_choice)
 
     print_text("********************************************")
-    print_text("ROUND: ##{game_stats[:rounds] + 1}")
-    print_text("#{user_name}'s choice: #{user_choice_value}")
-    print_text("Computer's choice: #{computer_choice_value}")
-
-    display_delay("Determining the winner...")
+    print_rounds(game_stats)
+    print_choices(user_name, user_choice_value, computer_choice_value)
 
     winner = determine_winner(user_choice_value, computer_choice_value)
     update_stats(game_stats, winner)
 
+    display_delay("The result of round-#{game_stats[:rounds]} is...")
     display_results(winner, user_name)
+    print_score(game_stats, user_name)
     print_text("********************************************")
   end
 
