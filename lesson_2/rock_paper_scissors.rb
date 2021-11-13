@@ -158,7 +158,7 @@ loop do
   while next_round?(game_stats)
     user_choice = get_user_choice(user_name)
     computer_choice = VALID_CHOICES.keys.sample
-
+    system("cls") || system("clear")
     user_choice_value = get_symbol_value(user_choice)
     computer_choice_value = get_symbol_value(computer_choice)
 
